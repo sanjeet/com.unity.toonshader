@@ -1,16 +1,14 @@
 ﻿using System.Collections;
-using System.Linq;
 using NUnit.Framework;
 using UnityEngine;
 using UnityEngine.TestTools;
 using UnityEngine.TestTools.Graphics;
 using UnityEngine.SceneManagement;
 using System.IO;
-using Unity.ToonShader.GraphicsTest;
 using UnityEditor;
 
 
-namespace Tests
+namespace Unity.ToonShader.GraphicsTest
 {
 #if UNITY_EDITOR
 public class UTSGraphicsTestsXR {
@@ -46,8 +44,7 @@ public class UTSGraphicsTestsXR {
         Assert.IsTrue(File.Exists(xrImagePath),$"XR Reference image not found at: {xrImagePath}");
         testCase.ReferenceImage = AssetDatabase.LoadAssetAtPath<Texture2D>(xrImagePath);
         
-        //Unity.ToonShader.GraphicsTest.SetupUTSGraphicsXRTestCases.Setup();
-        yield return UTS_GraphicsTests.RunInternal(testCase, isXR:true);
+        yield return UTSGraphicsTests.RunInternal(testCase, isXR:true);
         
         XRUtility.DisableXR();
     }
@@ -61,27 +58,21 @@ public class UTSGraphicsTestsNonXR  {
     [UseGraphicsTestCases(UTSGraphicsTestConstants.ReferenceImagePath)]
     [Timeout(3600000)] //1 hour
     public IEnumerator Run(GraphicsTestCase testCase) {
-        //[TODO-sin: 2025-7-2] Hack for now to disable XR for non-Stereo projects
-        string projectName = Path.GetFileName(Path.GetDirectoryName(UnityEngine.Application.dataPath));
-        if (!string.IsNullOrEmpty(projectName) && !projectName.Contains("Stereo")) {
-            XRUtility.DisableXR();
-        }
-        
-        yield return UTS_GraphicsTests.RunInternal(testCase);
+        yield return UTSGraphicsTests.RunInternal(testCase);
     }
 } 
 
 //----------------------------------------------------------------------------------------------------------------------
 
-    public class UTS_GraphicsTests {
+    public static class UTSGraphicsTests {
         internal static IEnumerator RunInternal(GraphicsTestCase testCase, bool isXR = false) {
             SceneManager.LoadScene(testCase.ScenePath);
 
             // Always wait one frame for scene load
             yield return null;
 
-            var cameras = GameObject.FindGameObjectsWithTag("MainCamera").Select(x => x.GetComponent<Camera>());
-            UTS_GraphicsTestSettings settings = Object.FindFirstObjectByType<UTS_GraphicsTestSettings>();
+            Camera mainCamera = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<Camera>();
+            UTSGraphicsTestSettings settings = Object.FindFirstObjectByType<UTSGraphicsTestSettings>();
             Assert.IsNotNull(settings, "Invalid test scene, couldn't find UTS_GraphicsTestSettings");
 
             if (isXR) {
@@ -94,8 +85,7 @@ public class UTSGraphicsTestsNonXR  {
             
             int waitFrames = settings.WaitFrames;
 
-            if (settings.ImageComparisonSettings.UseBackBuffer && settings.WaitFrames < 1)
-            {
+            if (settings.ImageComparisonSettings.UseBackBuffer && settings.WaitFrames < 1) {
                 waitFrames = 1;
             }
 
@@ -103,12 +93,11 @@ public class UTSGraphicsTestsNonXR  {
             for (int i = 0; i < waitFrames; i++)
                 yield return new WaitForEndOfFrame();
 
-            ImageAssert.AreEqual(testCase.ReferenceImage, cameras.Where(x => x != null), 
+            ImageAssert.AreEqual(testCase.ReferenceImage, mainCamera,
                 settings.ImageComparisonSettings, testCase.ReferenceImagePathLog);
 
             // Does it allocate memory when it renders what's on the main camera?
             bool allocatesMemory = false;
-            var mainCamera = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<Camera>();
 
             if (settings == null || settings.CheckMemoryAllocation)
             {
@@ -124,22 +113,6 @@ public class UTSGraphicsTestsNonXR  {
                     Assert.Fail("Allocated memory when rendering what is on main camera");
             }
         }
-
-        public static Texture2D LoadPNG(string filePath)
-        {
-
-            Texture2D tex2D = null;
-            byte[] fileData;
-
-            if (File.Exists(filePath))
-            {
-                fileData = File.ReadAllBytes(filePath);
-                tex2D = new Texture2D(2, 2);
-                tex2D.LoadImage(fileData);
-            }
-            return tex2D;
-        }
     }
-
 
 }
