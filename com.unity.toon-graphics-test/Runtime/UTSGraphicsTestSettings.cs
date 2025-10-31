@@ -2,10 +2,10 @@
 
 namespace Unity.ToonShader.GraphicsTest
 {
-    public class UTSGraphicsTestSettings : GraphicsTestSettings
-    {
+    public class UTSGraphicsTestSettings : GraphicsTestSettings {
+        public UTSGraphicsTestSettingsSO SO;
+        
         public int WaitFrames = 0;
-        public bool XRCompatible = true;
 #if UNITY_EDITOR_OSX || UNITY_STANDALONE_OSX
         public bool CheckMemoryAllocation = false;
 #else
