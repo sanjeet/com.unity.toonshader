@@ -1,6 +1,7 @@
 //#define USE_SIMPLE_UI
 
 using System;
+using Unity.Rendering.Toon;
 using UnityEngine;
 using UnityEngine.Rendering;
 
@@ -403,6 +404,8 @@ namespace UnityEditor.Rendering.Toon {
             material.SetFloat(ShaderPropUtsVersionX, kVersionX);
             material.SetFloat(ShaderPropUtsVersionY, kVersionY);
             material.SetFloat(ShaderPropUtsVersionZ, kVersionZ);
+            
+            ToonMaterialEditorUtility.ApplyRenderPipelineKeyword(material);
         }
 
 
@@ -1231,7 +1234,6 @@ namespace UnityEditor.Rendering.Toon {
             ApplyTessellation(material);
             ApplyMatCapMode(material);
             ApplyQueueAndRenderType(m_WorkflowMode, material);
-
 
             if (EditorGUI.EndChangeCheck()) {
                 m_MaterialEditor.PropertiesChanged();
