@@ -82,7 +82,6 @@ namespace UnityEditor.Rendering.Toon {
         internal const string ShaderDefineANGELRING_OFF = "_IS_ANGELRING_OFF";
         internal const string ShaderPropAngelRing = "_AngelRing";
         internal const string ShaderPropMatCap = "_MatCap";
-        internal const string ShaderPropMainTex = "_MainTex";
         internal const string ShaderPropClippingMode = "_ClippingMode";
         internal const string ShaderPropClippingMask = "_ClippingMask";
         internal const string ShaderProp_Set_1st_ShadePosition = "_Set_1st_ShadePosition";
@@ -93,7 +92,7 @@ namespace UnityEditor.Rendering.Toon {
         internal const string ShaderProp_Set_HighColorMask = "_Set_HighColorMask";
         internal const string ShaderProp_MatCap_Sampler = "_MatCap_Sampler";
         internal const string ShaderProp_Set_MatcapMask = "_Set_MatcapMask";
-        internal const string ShaderProp_OutlineTex = "_OutlineTex";
+        
         internal const string ShaderProp_Outline_Sampler = "_Outline_Sampler";
 
         internal const string ShaderPropSimpleUI = "_simpleUI";
@@ -132,8 +131,6 @@ namespace UnityEditor.Rendering.Toon {
         internal const string ShaderPropIs_LightColor_AR = "_Is_LightColor_AR";
         internal const string ShaderPropIs_LightColor_Outline = "_Is_LightColor_Outline";
         internal const string ShaderPropInvert_MatcapMask = "_Inverse_MatcapMask";
-        internal const string ShaderPropUse_BaseAs1st = "_Use_BaseAs1st";
-        internal const string ShaderPropUse_1stAs2nd = "_Use_1stAs2nd";
         internal const string ShaderPropIs_NormalMapToBase = "_Is_NormalMapToBase";
         internal const string ShaderPropIs_ColorShift = "_Is_ColorShift";
         internal const string ShaderPropRimLight = "_RimLight";
@@ -423,14 +420,14 @@ namespace UnityEditor.Rendering.Toon {
             stencilValue = FindProperty(ShaderPropStencilNo, props);
 
             stencilMode = FindProperty(ShaderPropStencilMode, props);
-            mainTex = FindProperty(ShaderPropMainTex, props);
-            baseColor = FindProperty("_BaseColor", props);
-            firstShadeMap = FindProperty("_1st_ShadeMap", props);
-            firstShadeColor = FindProperty("_1st_ShadeColor", props);
-            secondShadeMap = FindProperty("_2nd_ShadeMap", props);
-            secondShadeColor = FindProperty("_2nd_ShadeColor", props);
-            normalMap = FindProperty("_NormalMap", props);
-            bumpScale = FindProperty("_BumpScale", props);
+            mainTex = FindProperty(ToonConstants.SHADER_PROP_MAIN_TEX, props);
+            baseColor = FindProperty(ToonConstants.SHADER_PROP_BASE_COLOR, props);
+            firstShadeMap = FindProperty(ToonConstants.SHADER_PROP_1_ST_SHADE_MAP, props);
+            firstShadeColor = FindProperty(ToonConstants.SHADER_PROP_1_ST_SHADE_COLOR, props);
+            secondShadeMap = FindProperty(ToonConstants.SHADER_PROP_2ND_SHADE_MAP, props);
+            secondShadeColor = FindProperty(ToonConstants.SHADER_PROP_2ND_SHADE_COLOR, props);
+            normalMap = FindProperty(ToonConstants.SHADER_PROP_NORMAL_MAP, props);
+            bumpScale = FindProperty(ToonConstants.SHADER_PROP_BUMP_SCALE, props);
             set_1st_ShadePosition = FindProperty(ShaderProp_Set_1st_ShadePosition, props, false);
             set_2nd_ShadePosition = FindProperty(ShaderProp_Set_2nd_ShadePosition, props, false);
             shadingGradeMap = FindProperty(ShaderProp_ShadingGradeMap, props, false);
@@ -462,7 +459,7 @@ namespace UnityEditor.Rendering.Toon {
 
 
             outline_Sampler = FindProperty(ShaderProp_Outline_Sampler, props, false);
-            outlineTex = FindProperty(ShaderProp_OutlineTex, props, false);
+            outlineTex = FindProperty(ToonConstants.SHADER_PROP_OUTLINE_TEX, props, false);
             bakedNormal = FindProperty("_BakedNormal", props, false);
 
 
@@ -1424,15 +1421,15 @@ namespace UnityEditor.Rendering.Toon {
 
         void GUI_BasicThreeColors(Material material) {
             m_MaterialEditor.TexturePropertySingleLine(Styles.baseColorText, mainTex, baseColor);
-            //v.2.0.7 Synchronize _Color to _BaseColor.
+            //v.2.0.7 Synchronize _Color to _BaseColor. [TODO-sin: 2025-11-28] Verify this
             if (material.HasProperty("_Color")) {
-                material.SetColor("_Color", material.GetColor("_BaseColor"));
+                material.SetColor("_Color", material.GetColor(ToonConstants.SHADER_PROP_BASE_COLOR));
             }
             //
 
             EditorGUI.indentLevel += 2;
-            var applyTo1st = GUI_Toggle(material, Styles.applyTo1stShademapText, ShaderPropUse_BaseAs1st,
-                MaterialGetInt(material, ShaderPropUse_BaseAs1st) != 0);
+            var applyTo1st = GUI_Toggle(material, Styles.applyTo1stShademapText, ToonConstants.SHADER_PROP_USE_BASE_AS_1ST,
+                MaterialGetInt(material, ToonConstants.SHADER_PROP_USE_BASE_AS_1ST) != 0);
             EditorGUI.indentLevel -= 2;
 
 
@@ -1447,7 +1444,9 @@ namespace UnityEditor.Rendering.Toon {
             //            EditorGUI.EndDisabledGroup();
 
             EditorGUI.indentLevel += 2;
-            var applyTo2nd = GUI_Toggle(material, Styles.applyTo2ndShademapText, ShaderPropUse_1stAs2nd, MaterialGetInt(material, ShaderPropUse_1stAs2nd) != 0);
+            bool applyTo2nd = GUI_Toggle(material, Styles.applyTo2ndShademapText, 
+                ToonConstants.SHADER_PROP_USE_1ST_AS_2ND, 
+                MaterialGetInt(material, ToonConstants.SHADER_PROP_USE_1ST_AS_2ND) != 0);
             EditorGUI.indentLevel -= 2;
 
 
