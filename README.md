@@ -30,10 +30,19 @@ Besides the three basic colors, the **Unity Toon Shader** provides a wide variet
 
 To get started with cel-shading, see [Getting Started](com.unity.toonshader/Documentation~/GettingStarted.md).
 
+## Render Pipeline Compatibility
+The **Unity Toon Shader** works across the **Built-in Render Pipeline**,
+**Universal Render Pipeline (URP)**, and **High Definition Render Pipeline (HDRP)**.
+
+Feature availability can vary slightly between pipelines,
+so review the [feature differences](com.unity.toonshader/Documentation~/FeatureModel_en.md) document to confirm
+which features are supported in your target pipeline.
+
+> The use of linear color space is strongly recommended.
+
 # Table of Contents
 
 * [Unity Toon Shader](com.unity.toonshader/Documentation~/index.md)
-* [Requirements](com.unity.toonshader/Documentation~/System-Requirements.md)
 * [Installation](com.unity.toonshader/Documentation~/installation.md)
 * [Getting started](com.unity.toonshader/Documentation~/GettingStarted.md)
 * [Material Converter](com.unity.toonshader/Documentation~/MaterialConverter.md)
@@ -102,4 +111,4 @@ git config --global core.symlinks true
 
 
 
-*Auto-generated on Tue Dec  2 16:44:01 UTC 2025*
+*Auto-generated on Wed Dec  3 12:28:02 UTC 2025*
