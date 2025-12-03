@@ -45,7 +45,6 @@ which features are supported in your target pipeline.
 * [Unity Toon Shader](com.unity.toonshader/Documentation~/index.md)
 * [Installation](com.unity.toonshader/Documentation~/installation.md)
 * [Getting started](com.unity.toonshader/Documentation~/GettingStarted.md)
-* [Material Converter](com.unity.toonshader/Documentation~/MaterialConverter.md)
 * [Inspector Window Settings](com.unity.toonshader/Documentation~/Parameter-Settings.md)
   * [Modes](com.unity.toonshader/Documentation~/Modes.md)
   * [Shader](com.unity.toonshader/Documentation~/Shader.md)
@@ -67,6 +66,7 @@ which features are supported in your target pipeline.
 * Additional features for HDRP
   * [Box Light](com.unity.toonshader/Documentation~/HDRPBoxLight.md)
   * [Toon EV Adjustment](com.unity.toonshader/Documentation~/ToonEVAdjustment.md)
+* [Material Converter](com.unity.toonshader/Documentation~/MaterialConverter.md)
 * [Samples](com.unity.toonshader/Documentation~/sample-instlation.md)
 * [Feature Difference](com.unity.toonshader/Documentation~/FeatureModel_en.md)
 * [Known Issues](com.unity.toonshader/Documentation~/Known-issue.md)
@@ -111,4 +111,4 @@ git config --global core.symlinks true
 
 
 
-*Auto-generated on Wed Dec  3 12:28:02 UTC 2025*
+*Auto-generated on Wed Dec  3 12:31:50 UTC 2025*
