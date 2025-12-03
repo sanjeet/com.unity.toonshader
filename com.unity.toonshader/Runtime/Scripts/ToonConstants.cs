@@ -67,6 +67,7 @@ internal static class ToonConstants {
 
     //Outline
     internal const string SHADER_PROP_OUTLINE_MODE = "_OutlineMode";
+    internal static readonly int SHADER_PROP_OUTLINE_MODE_ID = Shader.PropertyToID(SHADER_PROP_OUTLINE_MODE);
     internal const string SHADER_PROP_OUTLINE_WIDTH = "_OutlineWidth";
     internal const string SHADER_PROP_OUTLINE_WIDTH_MAP = "_OutlineWidthMap";
     internal const string SHADER_PROP_OUTLINE_TEX = "_OutlineTex";
@@ -87,6 +88,9 @@ internal static class ToonConstants {
     
     internal const string SHADER_PROP_DIRECTIONAL_LIGHT_VIEW_POSITION = "_DirectionalLight_ViewPosition";
     
+    //Doc: Use this LightMode tag value to draw an extra Pass when rendering objects.
+    internal const string SHADER_LIGHT_MODE_NAME_FOR_OUTLINE = "SRPDefaultUnlit";
+
     
     internal const string GBUFFER_PASS_NAME = "GBuffer";
 
