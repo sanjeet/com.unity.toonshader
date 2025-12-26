@@ -1,20 +1,15 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
-using UnityEngine.UIElements;
+
 namespace UnityEditor.Rendering.Toon
 {
     internal sealed class BuiltInUTS2toIntegratedConverter : RenderPipelineConverterContainer
     {
         internal UTS3GUI.CullingMode m_cullingMode;
 
-
-
-
-        public override string name => "Unity-chan Toon Shader 2";
-        public override string info => "This tool converts project materials from Unity-chan Toon Shader to Unity Toon Shader " + UTS3GUI.versionString;
+        internal override string name => "Unity-chan Toon Shader 2";
+        
         public override int priority => -9000;
 
         public override void SetupConverter() {
