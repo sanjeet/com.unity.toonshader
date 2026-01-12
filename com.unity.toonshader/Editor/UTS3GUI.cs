@@ -48,19 +48,6 @@ namespace UnityEditor.Rendering.Toon {
             }
         }
 
-        internal static string srpDefaultLightModeName {
-            get {
-                const string legacyDefaultLightModeName = "Always";
-
-                if (currentRenderPipeline == RenderPipeline.Legacy) {
-                    return legacyDefaultLightModeName; // default.
-                }
-
-                return ToonConstants.SHADER_LIGHT_MODE_NAME_FOR_OUTLINE;
-            }
-        }
-
-
         internal void RenderingPerChennelsSetting(Material material) {
             if (currentRenderPipeline == RenderPipeline.HDRP) {
                 RenderingPerChennelsSettingHDRP(material);
@@ -1198,7 +1185,7 @@ namespace UnityEditor.Rendering.Toon {
                     break;
             }
 
-            SetupTransparentMode(material, transparencyEnabled == UTS_TransparentMode.On);
+            SetupTransparentModeForOutline(material, transparencyEnabled == UTS_TransparentMode.On);
 
             ShaderPropertiesGUI(materialEditor, material, props);
 
@@ -2093,22 +2080,28 @@ namespace UnityEditor.Rendering.Toon {
 
 
 
-        internal static void SetupTransparentMode(Material material, bool isTransparent) {
-            string srpDefaultLightModeTag = material.GetTag("LightMode", false, srpDefaultLightModeName);
+        internal static void SetupTransparentModeForOutline(Material material, bool isTransparent) {
             
-            if (srpDefaultLightModeTag != srpDefaultLightModeName) 
+
+#if URP_IS_INSTALLED_FOR_UTS || HDRP_IS_INSTALLED_FOR_UTS
+            string srpDefaultLightModeTag = material.GetTag("LightMode", false, ToonConstants.SHADER_LIGHT_MODE_NAME_FOR_OUTLINE);
+            
+            if (srpDefaultLightModeTag != ToonConstants.SHADER_LIGHT_MODE_NAME_FOR_OUTLINE) 
                 return;
+#endif
             
-            const string srpDefaultColorMask = "_SPRDefaultUnlitColorMask";
-            const string srpDefaultCullMode = "_SRPDefaultUnlitColMode";
+            const string OUTLINE_COLOR_MASK = "_SPRDefaultUnlitColorMask";
+            const string OUTLINE_CULL_MODE = "_SRPDefaultUnlitColMode";
 
             if (isTransparent) {
-                material.SetShaderPassEnabled(srpDefaultLightModeName, true);
-                MaterialSetInt(material, srpDefaultColorMask, 0);
-                MaterialSetInt(material, srpDefaultCullMode, (int)CullingMode.Backface);
+#if URP_IS_INSTALLED_FOR_UTS || HDRP_IS_INSTALLED_FOR_UTS
+                material.SetShaderPassEnabled(ToonConstants.SHADER_LIGHT_MODE_NAME_FOR_OUTLINE, true);
+#endif
+                MaterialSetInt(material, OUTLINE_COLOR_MASK, 0); //Don't write to the render target
+                MaterialSetInt(material, OUTLINE_CULL_MODE, (int)CullingMode.Backface);
             } else {
-                MaterialSetInt(material, srpDefaultColorMask, 15);
-                MaterialSetInt(material, srpDefaultCullMode, (int)CullingMode.Frontface);
+                MaterialSetInt(material, OUTLINE_COLOR_MASK, 15); //0xFF: presumably write to RGBA channels ?
+                MaterialSetInt(material, OUTLINE_CULL_MODE, (int)CullingMode.Frontface);
             }
         }
         
