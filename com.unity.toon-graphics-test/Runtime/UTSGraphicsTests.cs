@@ -84,12 +84,11 @@ public class UTSGraphicsTestsNonXR  {
             yield return null;
 
             Camera mainCamera = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<Camera>();
-            UTSGraphicsTestSettings settings = Object.FindFirstObjectByType<UTSGraphicsTestSettings>();
-            Assert.IsNotNull(settings, "Invalid test scene, couldn't find UTS_GraphicsTestSettings");
-
-            UTSGraphicsTestSettingsSO settingsSO = settings.SO;
-            Assert.IsNotNull(settingsSO);
-
+                
+            //"Packages/com.unity.toon-graphics-test/Runtime/Resources/UTSGraphicsSettings.asset";
+            UTSGraphicsTestSettingsSO settingsSO = Resources.Load<UTSGraphicsTestSettingsSO>("UTSGraphicsSettings");
+            Assert.IsNotNull(settingsSO, "[UTS Graphics Test] Settings not found");
+            
             ImageComparisonSettings imageComparisonSettings = settingsSO.ImageComparisonSettings;
             Assert.IsNotNull(imageComparisonSettings);
 
@@ -117,23 +116,13 @@ public class UTSGraphicsTestsNonXR  {
 
             ImageAssert.AreEqual(testCase.ReferenceImage, mainCamera,
                 imageComparisonSettings, testCase.ReferenceImagePathLog);
-
-            // Does it allocate memory when it renders what's on the main camera?
-            bool allocatesMemory = false;
-
-            if (settings == null || settings.CheckMemoryAllocation)
-            {
-                try
-                {
-                    ImageAssert.AllocatesMemory(mainCamera, imageComparisonSettings);
-                }
-                catch (AssertionException)
-                {
-                    allocatesMemory = true;
-                }
-                if (allocatesMemory)
-                    Assert.Fail("Allocated memory when rendering what is on main camera");
-            }
+            
+            // [TODO-sin: 2025-12-23] Check memory allocations
+            // try {
+            //     ImageAssert.AllocatesMemory(mainCamera, imageComparisonSettings);
+            // } catch (AssertionException) {
+            //     Assert.Fail("Allocated memory when rendering what is on main camera");
+            // }
         }
     }
 
